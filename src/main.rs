@@ -1,40 +1,40 @@
+// Zymartu hello world
+// https://youtu.be/B6ZFuYYZCSY
 use bevy::prelude::*;
 
-#[derive(Component)]
-struct Person;
+#[derive(Component, Debug)]
+struct Position {
+    x: f32,
+    y: f32,
+}
 
-
-#[derive(Component)]
-struct Name(String);
+#[derive(Component, Debug)]
+struct Velocity {
+    x: f32,
+    y: f32,
+}
 
 fn main() {
     App::new()
-        .add_systems(Startup, add_people)
-        .add_systems(Update, (hello_world, (update_people, greet_people).chain()))
+        .add_systems(Startup, spawn_spaceship)
+        .add_systems(Update, (update_position, print_position))
+        .add_plugins(DefaultPlugins)
         .run();
 }
 
-fn hello_world() {
-    println!("hello world!");
+fn spawn_spaceship(mut commands: Commands) {
+    commands.spawn((Position {x: 0.0, y: 0.0}, Velocity { x: 1.0, y: 1.0 }));
 }
 
-fn add_people(mut commands: Commands) {
-    commands.spawn((Person, Name("Elaina Proctor".to_string())));
-    commands.spawn((Person, Name("Renzo Hume".to_string())));
-    commands.spawn((Person, Name("Zayna Nieves".to_string())));
-}
-
-fn greet_people(query: Query<&Name, With<Person>>) {
-    for name in &query {
-        println!("hello {}!", name.0);
+fn update_position(mut query: Query<(&Velocity, &mut Position)>) {
+    for (velocity, mut position) in query.iter_mut() {
+        position.x += velocity.x;
+        position.y += velocity.y;
     }
 }
 
-fn update_people(mut query: Query<&mut Name, With<Person>>) {
-    for mut name in &mut query {
-        if name.0 == "Elaina Proctor" {
-            name.0 = "Elaina Hume".to_string();
-            break; // We don't need to change any other names.
-        }
+fn print_position(query: Query<(Entity, &Position)>) {
+    for (entity, position) in query.iter() {
+        info!("Entity {:?} is at position {:?},", entity, position);
     }
 }
