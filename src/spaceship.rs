@@ -17,15 +17,6 @@ impl Plugin for SpaceshipPlugin {
     }
 }
 
-// fn spawn_spaceship(mut commands: Commands) {
-//     commands.spawn((
-//         SpatialBundle::default(), 
-//         Velocity { 
-//             value: Vec3::new(0., 0., 0.), 
-//         },
-//     ));
-// }
-
 fn spawn_spaceship(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(SpaceshipBundle {
         velocity: Velocity {
