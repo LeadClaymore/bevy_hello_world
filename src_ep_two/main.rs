@@ -1,20 +1,15 @@
-// Zymartu hello world ep3
+// Zymartu hello world ep2
 // https://youtu.be/R-u1EY9fOJQ
+use bevy::prelude::*;
+use debug::DebugPlugin;
+use movement::MovementPlugin;
+use spaceship::SpaceshipPlugin;
+use camera::CameraPlugin;
 
 mod debug;
 mod movement;
 mod spaceship;
 mod camera;
-mod asteroids;
-
-use bevy::prelude::*;
-
-use debug::DebugPlugin;
-use movement::MovementPlugin;
-use spaceship::SpaceshipPlugin;
-use camera::CameraPlugin;
-use asteroids::AsteroidPlugin;
-
 
 #[derive(Component, Debug)]
 pub struct Velocity {
@@ -35,7 +30,6 @@ fn main() {
         .add_plugins(CameraPlugin)
         .add_plugins(MovementPlugin)
         .add_plugins(DebugPlugin)
-        .add_plugins(AsteroidPlugin)
         .run();
 }
 
