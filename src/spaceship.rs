@@ -28,4 +28,15 @@ fn spawn_spaceship(mut commands: Commands, asset_server: Res<AssetServer>) {
             ..default()
         }
     });
+
+    commands.spawn(SpaceshipBundle {
+        velocity: Velocity {
+            value: Vec3 {x: 0.0, y: 0.0, z: 0.0},
+        },
+        model: SceneBundle {
+            scene: asset_server.load("Planet.glb#Scene0"),
+            transform: Transform::from_translation(Vec3 {x: 0.0, y: 0.0, z: 0.0}),
+            ..default()
+        }
+    });
 }

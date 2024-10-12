@@ -22,12 +22,10 @@ fn spawn_camera(mut commands: Commands) {
 // the fix was to change the intensity of ambient light from .12 to 300.0
 fn spawn_light(mut commands: Commands) {
     commands.spawn( PointLightBundle {
-        transform: Transform::from_xyz(0.0, CAMERA_DISTANCE, 0.0),
+        transform: Transform::from_xyz(0.0, 0.0, 0.0),
         point_light: PointLight {
-            intensity: 4000.0,
+            intensity: 1500.0,
             range: 300.0,
-            radius: 1.0,
-            color: Color::srgb(1.0, 1.0, 1.0),
             ..default()
         },
         ..default()
