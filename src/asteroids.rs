@@ -2,6 +2,7 @@ use std::ops::Range;
 use bevy::prelude::*;
 use rand::*;
 use crate::movement::*;
+use crate::asset_loader::SceneAsset;
 
 const VELOCITY_SCALAR: f32 = 5.0;
 const ACCELERATION_SCALAR: f32 = 1.0;
@@ -27,7 +28,7 @@ impl Plugin for AsteroidPlugin {
     }
 }
 
-fn spawn_asteroid(mut commands: Commands, mut spawn_timer: ResMut<SpawnTimer>, time: Res<Time>, asset_server: Res<AssetServer>) {
+fn spawn_asteroid(mut commands: Commands, mut spawn_timer: ResMut<SpawnTimer>, time: Res<Time>, asset_server: Res<SceneAsset>) {
     spawn_timer.timer.tick(time.delta());
     if !spawn_timer.timer.just_finished() {
         return;
@@ -45,7 +46,7 @@ fn spawn_asteroid(mut commands: Commands, mut spawn_timer: ResMut<SpawnTimer>, t
             velocity: Velocity::new(velocity),
             acceleration: Acceleration::new(acceleration),
             model: SceneBundle {
-                scene: asset_server.load("Planet.glb#Scene0"),
+                scene: asset_server.asteroid.clone(),
                 transform: Transform::from_translation(translation),
                 ..default()
             },

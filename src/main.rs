@@ -6,6 +6,8 @@ mod movement;
 mod spaceship;
 mod camera;
 mod asteroids;
+pub mod asset_loader;
+//use crate::asset_loader::SceneAsset;
 
 use bevy::prelude::*;
 
@@ -14,6 +16,7 @@ use movement::MovementPlugin;
 use spaceship::SpaceshipPlugin;
 use camera::CameraPlugin;
 use asteroids::AsteroidPlugin;
+use asset_loader::AssetLoaderPlugin;
 
 
 #[derive(Component, Debug)]
@@ -36,6 +39,7 @@ fn main() {
         .add_plugins(MovementPlugin)
         .add_plugins(DebugPlugin)
         .add_plugins(AsteroidPlugin)
+        .add_plugins(AssetLoaderPlugin)
         .run();
 }
 
