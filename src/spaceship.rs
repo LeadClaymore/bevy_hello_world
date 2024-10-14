@@ -7,16 +7,21 @@ const STARTING_TRANSLATION: Vec3 = Vec3::new(0.0, 0.0, -20.0);
 const SPACESHIP_SPEED: f32 = 25.0;
 const SPACESHIP_ROTATION_SPEED: f32 = 2.5;
 const SPACESHIP_ROLL_SPEED: f32 = 2.5;
+const MISSILE_SPEED: f32 = 50.0;
+const MISSILE_FORWAD_SPAWN_SCALAR: f32 = 7.5;
 
 #[derive(Component, Debug)]
 pub struct Spaceship;
 
+#[derive(Component, Debug)]
+pub struct SpaceshipMissile;
 pub struct SpaceshipPlugin;
 
 impl Plugin for SpaceshipPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(PostStartup, spawn_spaceship)
-        .add_systems(Update, spaceship_movement_controls);
+        .add_systems(Update, spaceship_movement_controls)
+        .add_systems(Update, spaceship_weapon_controls);
     }
 }
 
@@ -69,3 +74,27 @@ fn spaceship_movement_controls(
     velocity.value = -transform.forward() * movement;
 }
 
+fn spaceship_weapon_controls(
+        mut commands: Commands, 
+        query: Query<&Transform, With<Spaceship>>,
+        keybord_input: Res<ButtonInput<KeyCode>>,
+        scene_assets: Res<SceneAsset>,
+    ) {
+    let transform = query.single();
+    if keybord_input.pressed(KeyCode::Space) {
+        commands.spawn((
+            MovingObjectBundle {
+                velocity: Velocity::new(-transform.forward() * MISSILE_SPEED),
+                acceleration: Acceleration::new(Vec3::ZERO),
+                model: SceneBundle {
+                    scene: scene_assets.missile.clone(),
+                    transform: Transform::from_translation(
+                        transform.translation + -transform.forward() * MISSILE_FORWAD_SPAWN_SCALAR,
+                    ),
+                    ..default()
+                },
+            },
+            SpaceshipMissile,
+        ));
+    }
+}
