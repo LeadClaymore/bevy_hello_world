@@ -44,12 +44,28 @@ fn spaceship_movement_controls(
     let mut roll = 0.0;
     let mut movement = 0.0;
 
+    if keyboard_input.pressed(KeyCode::KeyD) {
+        rotation = -SPACESHIP_ROTATION_SPEED * time.delta_seconds();
+    } else if keyboard_input.pressed(KeyCode::KeyA) {
+        rotation = SPACESHIP_ROTATION_SPEED * time.delta_seconds();
+    }
+
     if keyboard_input.pressed(KeyCode::KeyS) {
         movement = -SPACESHIP_SPEED;
     } else if keyboard_input.pressed(KeyCode::KeyW) {
         movement = SPACESHIP_SPEED;
     }
 
+    if keyboard_input.pressed(KeyCode::ShiftLeft) {
+        roll = -SPACESHIP_ROLL_SPEED * time.delta_seconds();
+    } else if keyboard_input.pressed(KeyCode::ControlLeft) {
+        roll = SPACESHIP_ROLL_SPEED * time.delta_seconds();
+    }
+
+    transform.rotate_y(rotation);
+    transform.rotate_local_z(roll);
+
     // this is for the models info
     velocity.value = -transform.forward() * movement;
 }
+
