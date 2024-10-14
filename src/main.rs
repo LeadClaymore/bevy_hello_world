@@ -7,6 +7,7 @@ mod spaceship;
 mod camera;
 mod asteroids;
 pub mod asset_loader;
+mod collision_detection;
 //use crate::asset_loader::SceneAsset;
 
 use bevy::prelude::*;
@@ -17,6 +18,7 @@ use spaceship::SpaceshipPlugin;
 use camera::CameraPlugin;
 use asteroids::AsteroidPlugin;
 use asset_loader::AssetLoaderPlugin;
+use collision_detection::CollisionDetectionPlugin;
 
 
 #[derive(Component, Debug)]
@@ -40,6 +42,7 @@ fn main() {
         .add_plugins(DebugPlugin)
         .add_plugins(AsteroidPlugin)
         .add_plugins(AssetLoaderPlugin)
+        .add_plugins(CollisionDetectionPlugin)
         .run();
 }
 

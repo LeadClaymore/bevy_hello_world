@@ -1,14 +1,18 @@
 use std::ops::Range;
+use bevy::ecs::query;
 use bevy::prelude::*;
 use rand::*;
 use crate::movement::*;
 use crate::asset_loader::SceneAsset;
+use crate::collision_detection::Collider;
 
 const VELOCITY_SCALAR: f32 = 5.0;
 const ACCELERATION_SCALAR: f32 = 1.0;
 const SPAWN_RANGE_X: Range<f32> = -25.0..25.0;
 const SPAWN_RANGE_Z: Range<f32> = 0.0..25.0;
 const SPAWN_TIME_SECONDS: f32 = 1.0;
+const ROTATE_SPEED: f32 = 2.5;
+const COLLIDER_RADIUS: f32 = 2.5;
 
 #[derive(Component, Debug)]
 pub struct Asteroid;
@@ -24,7 +28,7 @@ impl Plugin for AsteroidPlugin {
         app.insert_resource(SpawnTimer {
             timer: Timer::from_seconds(SPAWN_TIME_SECONDS, TimerMode::Repeating),
         })
-        .add_systems(Update, spawn_asteroid);
+        .add_systems(Update, (spawn_asteroid, rotate_asteroids, handle_asteroid_collisions));
     }
 }
 
@@ -45,6 +49,7 @@ fn spawn_asteroid(mut commands: Commands, mut spawn_timer: ResMut<SpawnTimer>, t
         MovingObjectBundle {
             velocity: Velocity::new(velocity),
             acceleration: Acceleration::new(acceleration),
+            collider: Collider::new(COLLIDER_RADIUS),
             model: SceneBundle {
                 scene: asset_server.asteroid.clone(),
                 transform: Transform::from_translation(translation),
@@ -53,4 +58,28 @@ fn spawn_asteroid(mut commands: Commands, mut spawn_timer: ResMut<SpawnTimer>, t
         },
         Asteroid,
     ));
+}
+
+fn rotate_asteroids(mut query: Query<&mut Transform, With<Asteroid>>, time: Res<Time>) {
+    for mut transform in query.iter_mut() {
+        transform.rotate_local_z(ROTATE_SPEED * time.delta_seconds());
+    }
+}
+
+fn handle_asteroid_collisions(
+    mut commands: Commands,
+    query: Query<(Entity, &Collider), With<Asteroid>>,
+) {
+    for (entity, collider) in query.iter() {
+        for &colliding_entity in collider.colliding_entities.iter() {
+            //if its astroid on asteroid collision
+            if query.get(colliding_entity).is_ok() {
+                continue;
+            }
+
+            //any other collision
+            //need recusive despawn because there is alot of other 
+            commands.entity(entity).despawn_recursive();
+        }
+    }
 }

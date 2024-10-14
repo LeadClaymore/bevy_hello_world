@@ -18,8 +18,8 @@ impl Plugin for AssetLoaderPlugin {
 
 fn load_assets(mut scene_assets: ResMut<SceneAsset>, asset_server: Res<AssetServer>) {
     *scene_assets = SceneAsset {
-        asteroid: asset_server.load("Planet.glb#Scene0"),
+        asteroid: asset_server.load("Asteroid.glb#Scene0"),
         spaceship: asset_server.load("Spaceship.glb#Scene0"),
-        missile: asset_server.load("Rock.glb#Scene0"),
+        missile: asset_server.load("Missile.glb#Scene0"),
     }
 }
