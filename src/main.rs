@@ -8,6 +8,7 @@ mod camera;
 mod asteroids;
 pub mod asset_loader;
 mod collision_detection;
+mod despawn;
 //use crate::asset_loader::SceneAsset;
 
 use bevy::prelude::*;
@@ -19,6 +20,7 @@ use camera::CameraPlugin;
 use asteroids::AsteroidPlugin;
 use asset_loader::AssetLoaderPlugin;
 use collision_detection::CollisionDetectionPlugin;
+use despawn::DespawnPlugin;
 
 
 #[derive(Component, Debug)]
@@ -43,6 +45,7 @@ fn main() {
         .add_plugins(AsteroidPlugin)
         .add_plugins(AssetLoaderPlugin)
         .add_plugins(CollisionDetectionPlugin)
+        .add_plugins(DespawnPlugin)
         .run();
 }
 
