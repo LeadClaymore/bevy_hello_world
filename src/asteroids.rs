@@ -4,6 +4,7 @@ use rand::*;
 use crate::movement::*;
 use crate::asset_loader::SceneAsset;
 use crate::collision_detection::Collider;
+use crate::schedule::InGameSet;
 
 const VELOCITY_SCALAR: f32 = 5.0;
 const ACCELERATION_SCALAR: f32 = 1.0;
@@ -27,7 +28,10 @@ impl Plugin for AsteroidPlugin {
         app.insert_resource(SpawnTimer {
             timer: Timer::from_seconds(SPAWN_TIME_SECONDS, TimerMode::Repeating),
         })
-        .add_systems(Update, (spawn_asteroid, rotate_asteroids, handle_asteroid_collisions));
+        .add_systems(
+            Update, 
+            (spawn_asteroid, rotate_asteroids).in_set(InGameSet::EntityUpdates),
+        );
     }
 }
 
@@ -65,20 +69,20 @@ fn rotate_asteroids(mut query: Query<&mut Transform, With<Asteroid>>, time: Res<
     }
 }
 
-fn handle_asteroid_collisions(
-    mut commands: Commands,
-    query: Query<(Entity, &Collider), With<Asteroid>>,
-) {
-    for (entity, collider) in query.iter() {
-        for &colliding_entity in collider.colliding_entities.iter() {
-            //if its astroid on asteroid collision
-            if query.get(colliding_entity).is_ok() {
-                continue;
-            }
+// fn handle_asteroid_collisions(
+//     mut commands: Commands,
+//     query: Query<(Entity, &Collider), With<Asteroid>>,
+// ) {
+//     for (entity, collider) in query.iter() {
+//         for &colliding_entity in collider.colliding_entities.iter() {
+//             //if its astroid on asteroid collision
+//             if query.get(colliding_entity).is_ok() {
+//                 continue;
+//             }
 
-            //any other collision
-            //need recusive despawn because there is alot of other 
-            commands.entity(entity).despawn_recursive();
-        }
-    }
-}
+//             //any other collision
+//             //need recusive despawn because there is alot of other 
+//             commands.entity(entity).despawn_recursive();
+//         }
+//     }
+// }
