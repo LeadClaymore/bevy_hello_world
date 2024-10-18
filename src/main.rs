@@ -10,6 +10,7 @@ pub mod asset_loader;
 mod collision_detection;
 mod despawn;
 mod schedule;
+mod state;
 //use crate::asset_loader::SceneAsset;
 
 use bevy::prelude::*;
@@ -23,6 +24,7 @@ use asset_loader::AssetLoaderPlugin;
 use collision_detection::CollisionDetectionPlugin;
 use despawn::DespawnPlugin;
 use schedule::SchedulePlugin;
+use state::StatePlugin;
 
 
 #[derive(Component, Debug)]
@@ -43,12 +45,14 @@ fn main() {
         .add_plugins(SpaceshipPlugin)
         .add_plugins(CameraPlugin)
         .add_plugins(MovementPlugin)
-        .add_plugins(DebugPlugin)
         .add_plugins(AsteroidPlugin)
         .add_plugins(AssetLoaderPlugin)
         .add_plugins(CollisionDetectionPlugin)
         .add_plugins(DespawnPlugin)
         .add_plugins(SchedulePlugin)
+        .add_plugins(StatePlugin)
+        
+        //.add_plugins(DebugPlugin)
         .run();
 }
 
